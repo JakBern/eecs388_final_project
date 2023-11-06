@@ -87,9 +87,10 @@ while(1):
         
         
 		#Your code here in this if condition -- The if condition is used to sample the every 4 data for sending.
-        if count%4 == 0:
+		if count%4 == 0:
 			#Your code here.
             
+			ser1.write(bytes(int(deg)))
 		
         
         

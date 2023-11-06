@@ -24,24 +24,34 @@ void auto_brake(int devid)
     // Task-1: 
     // Your code here (Use Lab 02 - Lab 04 for reference)
     // You must use the directions given in the project document to recieve full credit
-    gpio_write(RED_LED, OFF);
-    gpio_write(BLUE_LED, OFF);
-    gpio_write(GREEN_LED, OFF);
-    if ('Y' == ser_read() && 'Y' == ser_read()) {
-      int dist = ser_read(0);
-      int dist += ser_read(0) << 8;
+    int dist;
+
+    if ('Y' == ser_read() && 'Y' == ser_read()) {  
+      dist = ser_read(0);
+      dist += ser_read(0) << 8;
+
+      if (dist > 200) {
+        gpio_write(RED_LED, OFF);
+        gpio_write(GREEN_LED, ON);
+      }
+      else if (dist > 100) {
+        gpio_write(RED_LED, ON);
+        gpio_write(GREEN_LED, ON);
+      }
+      else if (dist > 60) {
+        gpio_write(GREEN_LED, OFF);
+        gpio_write(RED_LED, ON);
+      }
+      else {
+        gpio_write(GREEN_LED, OFF);
+        if ((get_cycles() / 3267) % 2) {
+          gpio_write(RED_LED, ON);
+        }
+        else {
+          gpio_write(RED_LED, OFF);
+        }
+      }
     }
-    if (dist > 200) {
-      gpio_write(GREEN_LED, ON);
-    }
-    else if (dist > 100) {
-      gpio_write(RED_LED, ON);
-      gpio_write(GREEN_LED, ON);
-    }
-    else if (dist > 60) {
-      gpio_write(RED_LED, ON);
-    }
-    else 
 }
 
 int main()

@@ -1,0 +1,44 @@
+task 1:
+needed to explore the library to understand how ser_read worked here
+-- required a devid, which specified which UART was used
+	-- this was in a DEFINE
+
+After this, I needed to check how the data RX worked with the UART
+-- revisit lab 04 and the remember how to address the data frame
+-- basically check twice if it's equal to the ASCII value of capital Y
+
+-- from there, I saw in the main that the LEDs were already initialized with the
+gpio_mode function, so I could just create an if-else block for the distances.
+I would turn off any LEDs that don't need to be on in certain functions.
+
+The block which required the most work was the final one, when the distance is less
+than 60 cm.
+
+For this, I made it blink every 100 ms by querying th etimer get_cycles() function,
+dividing it by the frequency in hertz it operated at (which was also divided by
+10 because 100 ms = 0.1 seconds). I then checked if this value was even or odd by
+taking it mod 2 and using that to control a nested if-else which either
+turned on the red led or turned it off.
+
+This is what I wrote before testing.
+
+After discussing with my labmate and the TA, I realized I needed to qualify
+the if-else block with the ser_read() portion at the beginning
+
+at first I considered using a while loop that was broken out of when data was read,
+but i asked the TA and found it was better to just qualify the entirety of the
+function with the ser_read() section.
+
+task 2:
+
+i just looked through the DNN file and found the ser1 line at the beginning
+
+i was unsure if this was used elsewhere in the python file, so i asked the TA if
+this was the serial connection we were supposed to use.
+
+In the provided area I used it to write the degree variable (which had been
+converted by the "bytes" function to an appropriate format) to the ttyAMA1 file
+which is how the Pi and HiFive communicate.
+
+I also converted the degree variable to an integer to make sure I wasn't sending
+a float to the HiFive
