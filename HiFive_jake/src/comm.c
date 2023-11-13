@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#define SERVO_PULSE_MAX 2400
+#define SERVO_PULSE_MIN 544 
+#define SERVO_PERIOD 20000 
+
 #include "eecs388_lib.h"
 
 void steering(int gpio, int pos)
@@ -9,6 +13,13 @@ void steering(int gpio, int pos)
     // Task-3: 
     // Your code goes here (Use Lab 05 for reference)
     // Check the project document to understand the task
+	int pwmHi = SERVO_PULSE_MIN + (pos * (SERVO_PULSE_MAX - SERVO_PULSE_MIN)) / 180;
+	int pwmLo = SERVO_PERIOD - pwmHi;
+	gpio_write(gpio, ON);
+	delay_usec(pwmHi);
+	gpio_write(gpio, OFF);
+	delay_usec(pwmLo);
+	
 }
 
 int read_from_pi(int devid)
@@ -16,6 +27,9 @@ int read_from_pi(int devid)
     // Task-2: 
     //after performing Task-2 at dnn.py code, modify this part to read angle values from Raspberry Pi
     // You code goes here (Use Lab 09 for reference)
+    int dir = ser_read(1);
+    dir += ser_read(1) << 8;
+    return dir;
 
 }
 

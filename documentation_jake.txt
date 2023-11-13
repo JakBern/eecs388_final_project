@@ -29,6 +29,8 @@ at first I considered using a while loop that was broken out of when data was re
 but i asked the TA and found it was better to just qualify the entirety of the
 function with the ser_read() section.
 
+This is still what I wrote before testing.
+
 task 2:
 
 i just looked through the DNN file and found the ser1 line at the beginning
@@ -41,4 +43,35 @@ converted by the "bytes" function to an appropriate format) to the ttyAMA1 file
 which is how the Pi and HiFive communicate.
 
 I also converted the degree variable to an integer to make sure I wasn't sending
-a float to the HiFive
+a float to the HiFive -- i discussed this with my labmate and he seemed to think
+it was reasonable to expect transmitting an interger rather than a float.
+
+this was before testing.
+
+I read more up on the bytes() function and realized everythin I was doing was wrong
+
+I looked up a better way to do this and found the .to_bytes() function.
+So i sent int(deg).to_bytes(2, 'little') to ser1.write
+I'm sending it little-endianly and with 2 bytes (in case an angle is > 256).
+This method not only works, but also tells me exactly how the output value
+is transmitted.
+
+I communicated this information to my lab mate later
+
+task 3:
+
+I noticed that in the provided source file that the Pi will communicate over
+the UART1 connection. This also made think about how the data should be transmitted
+using the ser_read() function and consider if the data has any kind of frame
+that I need to look for -- and if I'm reading an integer, how I should go about
+doing so.
+
+I decided to poke around in the documentation for the HiFive and Pi to look for how
+the data transmission process should go. I looked at lab 3 and lab 4 to see
+if the way data was transmitted was uniform between peripherals. It probably
+should've been obvious that the data frame was unique to the lidar, and otherwise
+the UART transmits a byte at a time.
+
+I should think about these problems teleologically -- what's the goal?
+
+I looked through labs 09 and 05.
