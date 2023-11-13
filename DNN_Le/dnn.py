@@ -90,8 +90,8 @@ while(1):
         if count%4 == 0:
 			#Your code here.
             #ser = serial.Serial("/dev/ttyAMA1", 115200)    
-		    degb = bytes(int(deg))
-            ser1.write(degb)
+		    degb = int(deg).tobytes(2, 'little') # make sure deg is an int and convert it to two bytes in little endian form
+            ser1.write(degb) # write to file
         
         pred_end   = time.time()
 

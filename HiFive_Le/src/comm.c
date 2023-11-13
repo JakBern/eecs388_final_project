@@ -9,6 +9,11 @@ void steering(int gpio, int pos)
     // Task-3: 
     // Your code goes here (Use Lab 05 for reference)
     // Check the project document to understand the task
+	int upulse = SERVO_PULSE_MIN + pos*((SERVO_PULSE_MAX - SERVO_PULSE_MIN)/180);
+	gpio_write(gpio, ON);
+	delay_usec(upulse);
+	gpio_write(gpio, OFF);
+	delay_usec(SERVO_PERIOD - upulse);
 }
 
 int read_from_pi(int devid)
