@@ -27,8 +27,16 @@ int read_from_pi(int devid)
     // Task-2: 
     //after performing Task-2 at dnn.py code, modify this part to read angle values from Raspberry Pi
     // You code goes here (Use Lab 09 for reference)
-    int dir = ser_read(1);
-    dir += ser_read(1) << 8;
+	int dir = 0;
+	char read_val[5] = {0};
+	if (ser_isready(devid)) {
+		for (int i = 0; i < 4; i++) {
+			char[i] = ser_read(devid);
+		}
+	}
+	if (read_val[0]) {
+		sscanf(read_val[index], "%d", &dir);
+	}
     return dir;
 
 }
@@ -40,9 +48,9 @@ void auto_brake(int devid)
     // You must use the directions given in the project document to recieve full credit
     int dist;
 
-    if ('Y' == ser_read() && 'Y' == ser_read()) {  
-      dist = ser_read(0);
-      dist += ser_read(0) << 8;
+    if ('Y' == ser_read(devid) && 'Y' == ser_read(devid)) {  
+      dist = ser_read(devid);
+      dist += ser_read(devid) << 8;
 
       if (dist > 200) {
         gpio_write(RED_LED, OFF);

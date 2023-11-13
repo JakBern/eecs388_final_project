@@ -58,6 +58,8 @@ is transmitted.
 
 I communicated this information to my lab mate later
 
+
+
 task 3:
 
 I noticed that in the provided source file that the Pi will communicate over
@@ -75,3 +77,12 @@ the UART transmits a byte at a time.
 I should think about these problems teleologically -- what's the goal?
 
 I looked through labs 09 and 05.
+
+
+SECOND DAY NOTES:
+debugging
+commenting out code
+plugging in pins
+forgot to use devid
+dnn.py had an indentation problem
+.to_bytes doesn't work in python 2
