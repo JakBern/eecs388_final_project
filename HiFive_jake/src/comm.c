@@ -8,18 +8,19 @@
 
 #include "eecs388_lib.h"
 
+int last_angle = 0;
+
 void steering(int gpio, int pos)
 {
     // Task-3: 
     // Your code goes here (Use Lab 05 for reference)
     // Check the project document to understand the task
 	int pwmHi = SERVO_PULSE_MIN + (pos * (SERVO_PULSE_MAX - SERVO_PULSE_MIN)) / 180;
-	int pwmLo = SERVO_PERIOD - pwmHi;
-	gpio_write(gpio, ON);
-	delay_usec(pwmHi);
-	gpio_write(gpio, OFF);
-	delay_usec(pwmLo);
-	
+  gpio_write(gpio, ON);
+  delay_usec(pwmHi);
+  gpio_write(gpio, OFF);
+  delay_usec(SERVO_PERIOD - pwmHi);
+  
 }
 
 int read_from_pi(int devid)
@@ -27,17 +28,19 @@ int read_from_pi(int devid)
     // Task-2: 
     //after performing Task-2 at dnn.py code, modify this part to read angle values from Raspberry Pi
     // You code goes here (Use Lab 09 for reference)
-	int dir = 0;
+	int dir = last_angle;
 	char read_val[5] = {0};
 	if (ser_isready(devid)) {
 		for (int i = 0; i < 4; i++) {
-			char[i] = ser_read(devid);
+			read_val[i] = ser_read(devid);
 		}
 	}
+  // printf("\nread from pi:%s", read_val);
 	if (read_val[0]) {
-		sscanf(read_val[index], "%d", &dir);
+		sscanf(read_val, "%d", &dir);
 	}
-    return dir;
+  last_angle = dir;
+  return dir;
 
 }
 
@@ -46,11 +49,13 @@ void auto_brake(int devid)
     // Task-1: 
     // Your code here (Use Lab 02 - Lab 04 for reference)
     // You must use the directions given in the project document to recieve full credit
-    int dist;
+    int dist =  0;
 
     if ('Y' == ser_read(devid) && 'Y' == ser_read(devid)) {  
       dist = ser_read(devid);
       dist += ser_read(devid) << 8;
+
+      // printf("\ndist=%d\n", dist);
 
       if (dist > 200) {
         gpio_write(RED_LED, OFF);
@@ -102,7 +107,7 @@ int main()
         int angle = read_from_pi(pi_to_hifive); //getting turn direction from pi
         printf("\nangle=%d", angle) 
         int gpio = PIN_19; 
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < 5; i++){
             // Here, we set the angle to 180 if the prediction from the DNN is a positive angle
             // and 0 if the prediction is a negative angle.
             // This is so that it is easier to see the movement of the servo.
