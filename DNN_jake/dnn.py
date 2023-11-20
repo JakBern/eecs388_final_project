@@ -12,7 +12,7 @@ import math
 import numpy as np
 import serial
 
-ser1 = serial.Serial("/dev/ttyAMA2", 115200)
+ser1 = serial.Serial("/dev/ttyAMA1", 115200)
 
 # Radian <-> Degree conversion functions
 def deg2rad(deg):
@@ -89,9 +89,13 @@ while(1):
 		#Your code here in this if condition -- The if condition is used to sample the every 4 data for sending.
 		if count%4 == 0:
 			#Your code here.
-			deg = str(int(deg)).rjust(4, ' ')
-			for x in range(4):
-				ser1.write(bytes(deg[x], 'ascii'))
+			degBytes = int(deg)
+			print(degBytes)
+			degBytes = str(degBytes)
+			degBytes = degBytes.rjust(4, ' ')
+			for char in degBytes:
+				outputChar = bytes(char)
+				ser1.write(outputChar)
 		
         
         
@@ -103,7 +107,7 @@ while(1):
 		pred_time = (pred_end - pred_start)*1000
 		tot_time  = (pred_end - cam_start)*1000
 
-		print('pred: {:0.2f} deg. took: {:0.2f} ms | cam={:0.2f} prep={:0.2f} pred={:0.2f}'.format(deg, tot_time, cam_time, prep_time, pred_time))
+		# print('pred: {:0.2f} deg. took: {:0.2f} ms | cam={:0.2f} prep={:0.2f} pred={:0.2f}'.format(deg, tot_time, cam_time, prep_time, pred_time))
 		
 		#Don't include the timings for the first frame due to cache warmup
 		if first_frame:
